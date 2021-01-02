@@ -348,7 +348,7 @@ def getPieceLegalMoves(board,position):
     elif piece == 5:
         rval += getKingMoves(board,player,position)
 
-    return piece
+    return rval
 
 def isPositionUnderThreat(board,player,position):
     opp = 20
