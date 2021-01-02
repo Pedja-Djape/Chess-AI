@@ -362,3 +362,27 @@ def isPositionUnderThreat(board,player,position):
             return True
 
     return False 
+
+
+def isInCheck(board,player):
+    for i in range(64):
+        if (board[i] - player) == 5:
+            check = isPositionUnderThreat(board,player,i)
+            return check
+    return False
+
+def isCheckmate(board,player):
+    for i in range(64):
+        if (board[i] - player) == 5:
+            check = isPositionUnderThreat(board,player,i)
+            if check:
+                moves = getPieceLegalMoves(board,i)
+                for m in moves:
+                    tmp = list(board)
+                    tmp[m] = tmp[i]
+                    tmp[i] = 0
+                    newCheck = isPositionUnderThreat(board,player,m)
+                    if not newCheck:
+                        return False
+                return True
+    return False
