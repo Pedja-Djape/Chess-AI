@@ -49,6 +49,21 @@ class gameTree:
                     num += 0.5 * len(moves)
         return num
     
+    def pStruct(self,board):
+        total = 0
+        for i in range(64):
+            if board[i] == 10:
+                if board[i+9]== 20:
+                    total += 1
+                if board[i+7] == 20:
+                    total += 1
+            elif board[i] == 20:
+                if board[i-9] == 10:
+                    total -= 1
+                if board[i-7] == 10:
+                    total -= 1
+        return total
+    
     def gameStatus(self,board):
         total = 0
         if isInCheck(board,10):
@@ -63,18 +78,18 @@ class gameTree:
         return total
 
     def evalBoard(self,board):
-        return (self.material(board) + self.countMoves(board) + self.gameStatus(board))
+        return (self.material(board) + self.countMoves(board) + self.gameStatus(board) + 6*self.pStruct(board))
 
-    def genFutureStates(self,player,stateNode,maxDepth):
+    def genFutureStates(self,player,stateNode):
         
-        self.futureHelp(player,stateNode,maxDepth,0,time())
+        self.futureHelp(player,stateNode,0,time())
         return True
     
-    def futureHelp(self,player,stateNode,maxDepth,currentDepth,begin):
+    def futureHelp(self,player,stateNode,currentDepth,begin):
         if (time() - begin) > 5:
-            currentDepth = maxDepth
-            print("Time limit reached")
-        if currentDepth == maxDepth:
+            currentDepth = self.maxDepth
+            # print("Time limit reached")
+        if currentDepth == self.maxDepth:
             return True
         board = stateNode.state['board']
         currentDepth += 1
@@ -87,11 +102,11 @@ class gameTree:
             for mov in playerMoves:
                 tmpState = list(board)
                 tmpState[mov], tmpState[pos] = tmpState[pos], 0
-                nextState = gameTree(board=tmpState,pts=0,maxDepth=maxDepth-1,src=pos,dst=mov)
+                nextState = gameTree(board=tmpState,pts=0,maxDepth=self.maxDepth-1,src=pos,dst=mov)
                 nextState.state['eval'] = nextState.evalBoard(nextState.state['board'])
                 (stateNode.potentMoves).append([[pos,mov],nextState.state['eval']])
                 (stateNode.children).append(nextState)
-                self.futureHelp(opp,nextState,maxDepth,currentDepth,begin)
+                self.futureHelp(opp,nextState,currentDepth,begin)
         return True
     
     def getFutureStates(self):
@@ -103,3 +118,5 @@ class gameTree:
     def getState(self):
         return self.state 
 
+    def getTopMove(self):
+        return self.move

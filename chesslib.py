@@ -56,6 +56,17 @@ def printBoard(board):
    print(accum)   
 #    return accum
 
+def printPositions():
+    accum="       ---- BLACK SIDE ----\n"
+    max=63
+    for j in range(8,0,-1):
+        # for i in range(max - j*8,max-j*8-8,-1):
+        for i in range(1,9,1):
+            accum=accum+'{0: <5}'.format(j*8 - i)
+        accum=accum+"\n"
+    accum=accum+"       ---- WHITE SIDE ----   "
+
+
 def getPlayerPositions(board,player):
    #If the player isn't white or black it's invalid
    if ((player !=10) and (player != 20)):
